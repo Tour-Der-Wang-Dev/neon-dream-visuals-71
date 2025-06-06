@@ -1,6 +1,8 @@
 
 import { Card } from '@/components/ui/card';
 import { Brain, Zap, Download, Code, Palette, Shield } from 'lucide-react';
+import AnimatedCounter from './AnimatedCounter';
+import BeforeAfterSlider from './BeforeAfterSlider';
 
 const Features = () => {
   const features = [
@@ -42,6 +44,21 @@ const Features = () => {
     }
   ];
 
+  const beforeAfterExamples = [
+    {
+      beforeImage: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><rect width="400" height="300" fill="%23333"/><text x="200" y="150" font-family="Arial" font-size="16" fill="white" text-anchor="middle" dy=".3em">Original Sketch</text></svg>',
+      afterImage: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><rect width="400" height="300" fill="url(%23grad1)"/><defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:rgb(139,92,246);stop-opacity:1" /><stop offset="100%" style="stop-color:rgb(59,130,246);stop-opacity:1" /></linearGradient></defs><text x="200" y="150" font-family="Arial" font-size="16" fill="white" text-anchor="middle" dy=".3em">AI Enhanced</text></svg>',
+      title: 'Sketch to Masterpiece',
+      description: 'Transform simple sketches into detailed artwork'
+    },
+    {
+      beforeImage: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><rect width="400" height="300" fill="%23555"/><text x="200" y="150" font-family="Arial" font-size="16" fill="white" text-anchor="middle" dy=".3em">Basic Photo</text></svg>',
+      afterImage: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><rect width="400" height="300" fill="url(%23grad2)"/><defs><linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:rgb(236,72,153);stop-opacity:1" /><stop offset="100%" style="stop-color:rgb(168,85,247);stop-opacity:1" /></linearGradient></defs><text x="200" y="150" font-family="Arial" font-size="16" fill="white" text-anchor="middle" dy=".3em">Artistic Style</text></svg>',
+      title: 'Style Transfer',
+      description: 'Apply artistic styles to any image'
+    }
+  ];
+
   return (
     <section id="features" className="py-20 relative">
       <div className="container mx-auto px-4 lg:px-8">
@@ -57,12 +74,17 @@ const Features = () => {
         </div>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
           {features.map((feature, index) => (
             <Card
               key={index}
-              className="glass-premium hover-lift group p-8 relative overflow-hidden border-purple-500/20 hover:border-purple-500/40 transition-all duration-500 neon-glow-blue fade-in-up"
-              style={{ animationDelay: `${0.1 * index}s`, opacity: 0, transform: 'translateY(30px)' }}
+              className="glass-premium hover-lift group p-8 relative overflow-hidden border-purple-500/20 hover:border-purple-500/40 transition-all duration-500 neon-glow-blue fade-in-up tilt-card"
+              style={{ 
+                animationDelay: `${0.1 * index}s`, 
+                opacity: 0, 
+                transform: 'translateY(30px)',
+                transformStyle: 'preserve-3d'
+              }}
             >
               {/* Background Gradient */}
               <div className={`absolute inset-0 bg-gradient-to-r ${feature.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
@@ -88,19 +110,39 @@ const Features = () => {
           ))}
         </div>
 
+        {/* Before/After Section */}
+        <div className="mb-20">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <h3 className="text-2xl md:text-4xl font-bold mb-4 font-inter">
+              See the <span className="text-gradient">Transformation</span>
+            </h3>
+            <p className="text-lg text-foreground/80 font-inter">
+              Witness the power of AI image enhancement and style transfer
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-8">
+            {beforeAfterExamples.map((example, index) => (
+              <BeforeAfterSlider key={index} {...example} />
+            ))}
+          </div>
+        </div>
+
         {/* Stats Section */}
-        <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {[
-            { number: '10M+', label: 'Images Generated' },
-            { number: '50K+', label: 'Happy Users' },
-            { number: '99.9%', label: 'Uptime' },
-            { number: '< 5s', label: 'Average Generation Time' }
+            { number: 10000000, label: 'Images Generated', suffix: '+' },
+            { number: 50000, label: 'Happy Users', suffix: '+' },
+            { number: 99.9, label: 'Uptime', suffix: '%' },
+            { number: 5, label: 'Avg Generation Time', suffix: 's', prefix: '< ' }
           ].map((stat, index) => (
             <div key={index} className="text-center fade-in-up" style={{ animationDelay: `${0.2 * index}s`, opacity: 0, transform: 'translateY(30px)' }}>
-              <div className="text-3xl md:text-4xl font-bold text-gradient mb-2 font-inter floating-element">
-                {stat.number}
-              </div>
-              <div className="text-foreground/60 text-sm font-inter">
+              <AnimatedCounter 
+                end={stat.number} 
+                suffix={stat.suffix} 
+                prefix={stat.prefix}
+              />
+              <div className="text-foreground/60 text-sm font-inter mt-2">
                 {stat.label}
               </div>
             </div>

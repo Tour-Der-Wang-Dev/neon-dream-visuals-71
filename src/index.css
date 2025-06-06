@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 @tailwind base;
 @tailwind components;
@@ -226,6 +225,18 @@
     position: absolute;
     opacity: 0.1;
     animation: geometricFloat 20s linear infinite;
+  }
+
+  .tilt-card {
+    transition: transform 0.3s ease-out;
+  }
+
+  .tilt-card:hover {
+    transform: perspective(1000px) rotateX(5deg) rotateY(5deg) translateY(-10px);
+  }
+
+  .smooth-scroll {
+    scroll-behavior: smooth;
   }
 }
 
