@@ -9,6 +9,7 @@ import HowItWorks from '@/components/HowItWorks';
 import ApiIntegrationForm from '@/components/ApiIntegrationForm';
 import Pricing from '@/components/Pricing';
 import ImageGalleryModal from '@/components/ImageGalleryModal';
+import AdvancedImageGallery from '@/components/AdvancedImageGallery';
 import Footer from '@/components/Footer';
 import AnimatedBackground from '@/components/AnimatedBackground';
 import ScrollProgress from '@/components/ScrollProgress';
@@ -38,6 +39,7 @@ const Index = () => {
         <HowItWorks />
         <ApiIntegrationForm />
         <ImageGalleryModal />
+        <AdvancedImageGallery />
         <Pricing />
         <Footer />
       </div>
