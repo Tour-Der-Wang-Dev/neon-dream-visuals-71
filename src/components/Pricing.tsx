@@ -2,7 +2,15 @@
 import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Check, Star, Sparkles } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Check, Star, Sparkles, Calculator, Users, Building2 } from 'lucide-react';
+import CreditSystem from '@/components/CreditSystem';
+import FeatureMatrix from '@/components/FeatureMatrix';
+import UsageCalculator from '@/components/UsageCalculator';
+import PaymentIntegration from '@/components/PaymentIntegration';
+import SubscriptionManagement from '@/components/SubscriptionManagement';
+import ApiRateLimits from '@/components/ApiRateLimits';
+import EnterpriseContact from '@/components/EnterpriseContact';
 
 const Pricing = () => {
   const [isYearly, setIsYearly] = useState(false);
@@ -12,6 +20,7 @@ const Pricing = () => {
       name: 'Free',
       description: 'Perfect for getting started',
       price: { monthly: 0, yearly: 0 },
+      credits: 10,
       features: [
         '10 images per month',
         'Basic AI models',
@@ -27,6 +36,7 @@ const Pricing = () => {
       name: 'Pro',
       description: 'For creative professionals',
       price: { monthly: 29, yearly: 290 },
+      credits: 1000,
       features: [
         '1,000 images per month',
         'All AI models',
@@ -44,6 +54,7 @@ const Pricing = () => {
       name: 'Enterprise',
       description: 'For teams and businesses',
       price: { monthly: 99, yearly: 990 },
+      credits: 'unlimited',
       features: [
         'Unlimited images',
         'All AI models + early access',
@@ -66,11 +77,11 @@ const Pricing = () => {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-3xl md:text-5xl font-bold mb-6">
-            Simple, Transparent{' '}
-            <span className="text-gradient">Pricing</span>
+            Comprehensive{' '}
+            <span className="text-gradient">Pricing Solutions</span>
           </h2>
           <p className="text-xl text-foreground/80 leading-relaxed mb-8">
-            Choose the perfect plan for your creative needs. All plans include our core features.
+            Complete pricing management with credits, subscriptions, and enterprise solutions
           </p>
 
           {/* Billing Toggle */}
@@ -101,92 +112,149 @@ const Pricing = () => {
           </div>
         </div>
 
-        {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {plans.map((plan, index) => (
-            <Card
-              key={index}
-              className={`glass hover-lift relative overflow-hidden border-white/10 transition-all duration-300 ${
-                plan.popular
-                  ? 'border-primary/50 scale-105'
-                  : 'hover:border-primary/30'
-              }`}
-            >
-              {/* Popular Badge */}
-              {plan.popular && (
-                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                  <div className="bg-gradient-primary text-white px-4 py-1 rounded-full text-sm font-medium flex items-center">
-                    <Star className="w-4 h-4 mr-1" />
-                    Most Popular
-                  </div>
-                </div>
-              )}
+        {/* Comprehensive Pricing Tabs */}
+        <Tabs defaultValue="plans" className="w-full">
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 lg:grid-cols-7 glass-premium mb-8">
+            <TabsTrigger value="plans" className="font-inter text-xs">
+              <Star className="w-4 h-4 mr-1" />
+              Plans
+            </TabsTrigger>
+            <TabsTrigger value="credits" className="font-inter text-xs">
+              <Sparkles className="w-4 h-4 mr-1" />
+              Credits
+            </TabsTrigger>
+            <TabsTrigger value="calculator" className="font-inter text-xs">
+              <Calculator className="w-4 h-4 mr-1" />
+              Calculator
+            </TabsTrigger>
+            <TabsTrigger value="compare" className="font-inter text-xs">
+              Compare
+            </TabsTrigger>
+            <TabsTrigger value="payment" className="font-inter text-xs">
+              Payment
+            </TabsTrigger>
+            <TabsTrigger value="manage" className="font-inter text-xs">
+              <Users className="w-4 h-4 mr-1" />
+              Manage
+            </TabsTrigger>
+            <TabsTrigger value="enterprise" className="font-inter text-xs">
+              <Building2 className="w-4 h-4 mr-1" />
+              Enterprise
+            </TabsTrigger>
+          </TabsList>
 
-              <div className="p-8">
-                {/* Plan Header */}
-                <div className="text-center mb-8">
-                  <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-                  <p className="text-foreground/60 mb-6">{plan.description}</p>
-                  
-                  <div className="flex items-baseline justify-center">
-                    <span className="text-4xl md:text-5xl font-bold">
-                      ${isYearly ? plan.price.yearly : plan.price.monthly}
-                    </span>
-                    {plan.price.monthly > 0 && (
-                      <span className="text-foreground/60 ml-2">
-                        /{isYearly ? 'year' : 'month'}
-                      </span>
-                    )}
-                  </div>
-                  
-                  {isYearly && plan.price.monthly > 0 && (
-                    <p className="text-sm text-green-400 mt-2">
-                      Save ${(plan.price.monthly * 12) - plan.price.yearly} annually
-                    </p>
-                  )}
-                </div>
-
-                {/* Features */}
-                <ul className="space-y-4 mb-8">
-                  {plan.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-center">
-                      <Check className="w-5 h-5 text-primary mr-3 flex-shrink-0" />
-                      <span className="text-foreground/80">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                {/* CTA Button */}
-                <Button
-                  className={`w-full py-3 font-medium transition-all duration-300 ${
+          {/* Pricing Plans */}
+          <TabsContent value="plans" className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              {plans.map((plan, index) => (
+                <Card
+                  key={index}
+                  className={`glass hover-lift relative overflow-hidden border-white/10 transition-all duration-300 ${
                     plan.popular
-                      ? 'bg-gradient-primary hover:opacity-90 text-white animate-pulse-neon'
-                      : 'glass border-primary/30 hover:border-primary hover:bg-primary/10'
+                      ? 'border-primary/50 scale-105'
+                      : 'hover:border-primary/30'
                   }`}
                 >
-                  {plan.cta}
-                </Button>
-              </div>
+                  {/* Popular Badge */}
+                  {plan.popular && (
+                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                      <div className="bg-gradient-primary text-white px-4 py-1 rounded-full text-sm font-medium flex items-center">
+                        <Star className="w-4 h-4 mr-1" />
+                        Most Popular
+                      </div>
+                    </div>
+                  )}
 
-              {/* Background Effect */}
-              <div className={`absolute inset-0 bg-gradient-to-r ${plan.gradient} opacity-0 hover:opacity-5 transition-opacity duration-300`} />
-            </Card>
-          ))}
-        </div>
+                  <div className="p-8">
+                    {/* Plan Header */}
+                    <div className="text-center mb-8">
+                      <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
+                      <p className="text-foreground/60 mb-6">{plan.description}</p>
+                      
+                      <div className="flex items-baseline justify-center">
+                        <span className="text-4xl md:text-5xl font-bold">
+                          ${isYearly ? plan.price.yearly : plan.price.monthly}
+                        </span>
+                        {plan.price.monthly > 0 && (
+                          <span className="text-foreground/60 ml-2">
+                            /{isYearly ? 'year' : 'month'}
+                          </span>
+                        )}
+                      </div>
+                      
+                      {isYearly && plan.price.monthly > 0 && (
+                        <p className="text-sm text-green-400 mt-2">
+                          Save ${(plan.price.monthly * 12) - plan.price.yearly} annually
+                        </p>
+                      )}
 
-        {/* Feature Comparison */}
-        <div className="mt-20">
-          <Card className="glass p-8">
-            <h3 className="text-2xl font-bold text-center mb-8">
-              Need More Details? Compare Features
-            </h3>
-            <div className="text-center">
-              <Button variant="outline" className="glass border-primary/30 hover:border-primary">
-                View Full Comparison
-              </Button>
+                      <div className="mt-4 p-2 glass rounded-lg">
+                        <div className="text-lg font-bold text-primary">
+                          {typeof plan.credits === 'number' ? `${plan.credits} Credits` : 'Unlimited Credits'}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Features */}
+                    <ul className="space-y-4 mb-8">
+                      {plan.features.map((feature, featureIndex) => (
+                        <li key={featureIndex} className="flex items-center">
+                          <Check className="w-5 h-5 text-primary mr-3 flex-shrink-0" />
+                          <span className="text-foreground/80">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {/* CTA Button */}
+                    <Button
+                      className={`w-full py-3 font-medium transition-all duration-300 ${
+                        plan.popular
+                          ? 'bg-gradient-primary hover:opacity-90 text-white animate-pulse-neon'
+                          : 'glass border-primary/30 hover:border-primary hover:bg-primary/10'
+                      }`}
+                    >
+                      {plan.cta}
+                    </Button>
+                  </div>
+
+                  {/* Background Effect */}
+                  <div className={`absolute inset-0 bg-gradient-to-r ${plan.gradient} opacity-0 hover:opacity-5 transition-opacity duration-300`} />
+                </Card>
+              ))}
             </div>
-          </Card>
-        </div>
+          </TabsContent>
+
+          {/* Credit System */}
+          <TabsContent value="credits">
+            <CreditSystem />
+          </TabsContent>
+
+          {/* Usage Calculator */}
+          <TabsContent value="calculator">
+            <UsageCalculator />
+          </TabsContent>
+
+          {/* Feature Comparison */}
+          <TabsContent value="compare">
+            <FeatureMatrix />
+          </TabsContent>
+
+          {/* Payment Integration */}
+          <TabsContent value="payment">
+            <PaymentIntegration />
+          </TabsContent>
+
+          {/* Subscription Management & API Limits */}
+          <TabsContent value="manage" className="space-y-8">
+            <SubscriptionManagement />
+            <ApiRateLimits />
+          </TabsContent>
+
+          {/* Enterprise Contact */}
+          <TabsContent value="enterprise">
+            <EnterpriseContact />
+          </TabsContent>
+        </Tabs>
       </div>
     </section>
   );
