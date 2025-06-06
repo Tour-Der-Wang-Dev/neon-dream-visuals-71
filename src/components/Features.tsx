@@ -47,11 +47,11 @@ const Features = () => {
       <div className="container mx-auto px-4 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-3xl md:text-5xl font-bold mb-6">
+          <h2 className="text-3xl md:text-5xl font-bold mb-6 font-inter fade-in-up">
             Powerful Features for{' '}
             <span className="text-gradient">Creative Professionals</span>
           </h2>
-          <p className="text-xl text-foreground/80 leading-relaxed">
+          <p className="text-xl text-foreground/80 leading-relaxed font-inter fade-in-up-delay">
             Everything you need to bring your imagination to life with cutting-edge AI technology
           </p>
         </div>
@@ -61,28 +61,29 @@ const Features = () => {
           {features.map((feature, index) => (
             <Card
               key={index}
-              className="glass hover-lift group p-8 relative overflow-hidden border-white/10 hover:border-primary/30 transition-all duration-300"
+              className="glass-premium hover-lift group p-8 relative overflow-hidden border-purple-500/20 hover:border-purple-500/40 transition-all duration-500 neon-glow-blue fade-in-up"
+              style={{ animationDelay: `${0.1 * index}s`, opacity: 0, transform: 'translateY(30px)' }}
             >
               {/* Background Gradient */}
               <div className={`absolute inset-0 bg-gradient-to-r ${feature.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
               
               {/* Icon */}
-              <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${feature.gradient} p-0.5 mb-6 group-hover:scale-110 transition-transform duration-300`}>
+              <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${feature.gradient} p-0.5 mb-6 group-hover:scale-110 transition-transform duration-300 neon-glow floating-element`}>
                 <div className="w-full h-full bg-background rounded-lg flex items-center justify-center">
                   <feature.icon className="w-6 h-6 text-white" />
                 </div>
               </div>
 
               {/* Content */}
-              <h3 className="text-xl font-semibold mb-4 group-hover:text-primary transition-colors duration-300">
+              <h3 className="text-xl font-semibold mb-4 group-hover:text-purple-400 transition-colors duration-300 font-inter">
                 {feature.title}
               </h3>
-              <p className="text-foreground/80 leading-relaxed">
+              <p className="text-foreground/80 leading-relaxed font-inter">
                 {feature.description}
               </p>
 
               {/* Hover Effect */}
-              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </Card>
           ))}
         </div>
@@ -95,11 +96,11 @@ const Features = () => {
             { number: '99.9%', label: 'Uptime' },
             { number: '< 5s', label: 'Average Generation Time' }
           ].map((stat, index) => (
-            <div key={index} className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-gradient mb-2">
+            <div key={index} className="text-center fade-in-up" style={{ animationDelay: `${0.2 * index}s`, opacity: 0, transform: 'translateY(30px)' }}>
+              <div className="text-3xl md:text-4xl font-bold text-gradient mb-2 font-inter floating-element">
                 {stat.number}
               </div>
-              <div className="text-foreground/60 text-sm">
+              <div className="text-foreground/60 text-sm font-inter">
                 {stat.label}
               </div>
             </div>
