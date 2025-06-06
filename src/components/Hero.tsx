@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { ArrowRight, Sparkles, Image as ImageIcon, Zap } from 'lucide-react';
+import LazyImage from '@/components/LazyImage';
 
 const Hero = () => {
   const [prompt, setPrompt] = useState('');
@@ -19,10 +20,30 @@ const Hero = () => {
   };
 
   const exampleImages = [
-    { title: 'Digital Art', description: 'Futuristic cityscape' },
-    { title: 'Portrait', description: 'Realistic character' },
-    { title: 'Landscape', description: 'Ethereal mountains' },
-    { title: 'Abstract', description: 'Geometric patterns' },
+    { 
+      title: 'Digital Art', 
+      description: 'Futuristic cityscape',
+      src: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=400&fit=crop&auto=format',
+      webpSrc: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=400&fit=crop&auto=format&fm=webp'
+    },
+    { 
+      title: 'Portrait', 
+      description: 'Realistic character',
+      src: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=400&fit=crop&auto=format',
+      webpSrc: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=400&fit=crop&auto=format&fm=webp'
+    },
+    { 
+      title: 'Landscape', 
+      description: 'Ethereal mountains',
+      src: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&h=400&fit=crop&auto=format',
+      webpSrc: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&h=400&fit=crop&auto=format&fm=webp'
+    },
+    { 
+      title: 'Abstract', 
+      description: 'Geometric patterns',
+      src: 'https://images.unsplash.com/photo-1487887235947-a955ef187fcc?w=400&h=400&fit=crop&auto=format',
+      webpSrc: 'https://images.unsplash.com/photo-1487887235947-a955ef187fcc?w=400&h=400&fit=crop&auto=format&fm=webp'
+    },
   ];
 
   return (
@@ -108,8 +129,15 @@ const Hero = () => {
                style={{ animationDelay: '1s', opacity: 0, transform: 'translateY(30px)' }}>
             {exampleImages.map((image, index) => (
               <Card key={index} className="glass-premium hover-lift group cursor-pointer overflow-hidden border-purple-500/20 neon-glow-blue transition-all duration-300">
-                <div className="aspect-square bg-gradient-to-br from-purple-500/20 to-blue-500/20 flex items-center justify-center relative">
-                  <ImageIcon className="w-12 h-12 text-purple-400/60 group-hover:scale-110 transition-transform duration-300" />
+                <div className="aspect-square relative">
+                  <LazyImage
+                    src={image.src}
+                    webpSrc={image.webpSrc}
+                    alt={image.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    width={400}
+                    height={400}
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="absolute bottom-2 left-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <h4 className="text-white font-medium text-sm font-inter">{image.title}</h4>

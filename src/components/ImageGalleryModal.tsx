@@ -4,10 +4,12 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ChevronLeft, ChevronRight, X, Download, Share, Heart, Eye } from 'lucide-react';
+import LazyImage from '@/components/LazyImage';
 
 interface GalleryImage {
   id: number;
   src: string;
+  webpSrc: string;
   title: string;
   prompt: string;
   model: string;
@@ -20,28 +22,32 @@ const ImageGalleryModal = () => {
   const galleryImages: GalleryImage[] = [
     {
       id: 1,
-      src: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"><rect width="400" height="400" fill="url(%23grad1)"/><defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:rgb(139,92,246);stop-opacity:1" /><stop offset="100%" style="stop-color:rgb(59,130,246);stop-opacity:1" /></linearGradient></defs><text x="200" y="200" font-family="Arial" font-size="14" fill="white" text-anchor="middle" dy=".3em">Futuristic City</text></svg>',
+      src: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&h=600&fit=crop&auto=format',
+      webpSrc: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&h=600&fit=crop&auto=format&fm=webp',
       title: 'Futuristic Cityscape',
       prompt: 'A futuristic cityscape at sunset with flying cars',
       model: 'Stable Diffusion'
     },
     {
       id: 2,
-      src: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"><rect width="400" height="400" fill="url(%23grad2)"/><defs><linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:rgb(236,72,153);stop-opacity:1" /><stop offset="100%" style="stop-color:rgb(168,85,247);stop-opacity:1" /></linearGradient></defs><text x="200" y="200" font-family="Arial" font-size="14" fill="white" text-anchor="middle" dy=".3em">Digital Portrait</text></svg>',
+      src: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&h=600&fit=crop&auto=format',
+      webpSrc: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&h=600&fit=crop&auto=format&fm=webp',
       title: 'Digital Portrait',
       prompt: 'Portrait of a cyberpunk character with neon lights',
       model: 'DALL-E 2'
     },
     {
       id: 3,
-      src: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"><rect width="400" height="400" fill="url(%23grad3)"/><defs><linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:rgb(34,197,94);stop-opacity:1" /><stop offset="100%" style="stop-color:rgb(59,130,246);stop-opacity:1" /></linearGradient></defs><text x="200" y="200" font-family="Arial" font-size="14" fill="white" text-anchor="middle" dy=".3em">Fantasy Landscape</text></svg>',
+      src: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600&h=600&fit=crop&auto=format',
+      webpSrc: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600&h=600&fit=crop&auto=format&fm=webp',
       title: 'Fantasy Landscape',
       prompt: 'Magical forest with glowing mushrooms and fairy lights',
       model: 'Midjourney Style'
     },
     {
       id: 4,
-      src: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"><rect width="400" height="400" fill="url(%23grad4)"/><defs><linearGradient id="grad4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:rgb(249,115,22);stop-opacity:1" /><stop offset="100%" style="stop-color:rgb(239,68,68);stop-opacity:1" /></linearGradient></defs><text x="200" y="200" font-family="Arial" font-size="14" fill="white" text-anchor="middle" dy=".3em">Abstract Art</text></svg>',
+      src: 'https://images.unsplash.com/photo-1487887235947-a955ef187fcc?w=600&h=600&fit=crop&auto=format',
+      webpSrc: 'https://images.unsplash.com/photo-1487887235947-a955ef187fcc?w=600&h=600&fit=crop&auto=format&fm=webp',
       title: 'Abstract Art',
       prompt: 'Colorful abstract geometric patterns',
       model: 'Stable Diffusion'
@@ -80,7 +86,14 @@ const ImageGalleryModal = () => {
                   }}
                 >
                   <div className="aspect-square relative">
-                    <img src={image.src} alt={image.title} className="w-full h-full object-cover" />
+                    <LazyImage
+                      src={image.src}
+                      webpSrc={image.webpSrc}
+                      alt={image.title}
+                      className="w-full h-full object-cover"
+                      width={300}
+                      height={300}
+                    />
                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                       <Eye className="w-8 h-8 text-white" />
                     </div>
@@ -95,10 +108,13 @@ const ImageGalleryModal = () => {
               <DialogContent className="max-w-4xl glass-premium border-purple-500/20 p-0">
                 <div className="relative">
                   <div className="aspect-video relative">
-                    <img 
-                      src={galleryImages[selectedImage].src} 
+                    <LazyImage
+                      src={galleryImages[selectedImage].src}
+                      webpSrc={galleryImages[selectedImage].webpSrc}
                       alt={galleryImages[selectedImage].title}
                       className="w-full h-full object-cover"
+                      width={800}
+                      height={450}
                     />
                     
                     {/* Navigation */}
