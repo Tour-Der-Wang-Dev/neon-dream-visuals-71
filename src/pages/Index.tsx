@@ -4,6 +4,7 @@ import Hero from '@/components/Hero';
 import Features from '@/components/Features';
 import LiveDemo from '@/components/LiveDemo';
 import HowItWorks from '@/components/HowItWorks';
+import ApiIntegrationForm from '@/components/ApiIntegrationForm';
 import Pricing from '@/components/Pricing';
 import ImageGalleryModal from '@/components/ImageGalleryModal';
 import Footer from '@/components/Footer';
@@ -21,6 +22,7 @@ const Index = () => {
         <LiveDemo />
         <Features />
         <HowItWorks />
+        <ApiIntegrationForm />
         <ImageGalleryModal />
         <Pricing />
         <Footer />
