@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 @tailwind base;
 @tailwind components;
@@ -77,6 +78,9 @@
     min-height: 100vh;
     position: relative;
     overflow-x: hidden;
+    /* Mobile optimizations */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body::before {
@@ -238,6 +242,51 @@
   .smooth-scroll {
     scroll-behavior: smooth;
   }
+
+  /* Mobile-specific utilities */
+  .touch-manipulation {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .active\:scale-95:active {
+    transform: scale(0.95);
+  }
+
+  .active\:scale-98:active {
+    transform: scale(0.98);
+  }
+
+  /* Mobile gesture utilities */
+  .swipe-reveal {
+    transform: translateX(0);
+    transition: transform 0.3s ease-out;
+  }
+
+  .swipe-reveal.swiped {
+    transform: translateX(-80px);
+  }
+
+  /* Mobile-optimized animations */
+  .mobile-fade-in {
+    animation: mobileFadeIn 0.4s ease-out forwards;
+    opacity: 0;
+  }
+
+  .mobile-slide-up {
+    animation: mobileSlideUp 0.4s ease-out forwards;
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  /* Reduced motion for mobile users */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }
 
 /* Enhanced Keyframe animations */
@@ -254,6 +303,19 @@
 }
 
 @keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mobileFadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes mobileSlideUp {
   to {
     opacity: 1;
     transform: translateY(0);
@@ -321,9 +383,9 @@
   animation: gradientShift 3s ease infinite;
 }
 
-/* Scrollbar styling */
+/* Mobile-optimized scrollbar styling */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -337,4 +399,46 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, hsl(var(--neon-purple)), hsl(var(--electric-purple)));
+}
+
+/* Mobile viewport optimizations */
+@media screen and (max-width: 768px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Improve touch targets */
+  button, a, input, select, textarea {
+    min-height: 44px;
+  }
+
+  /* Optimize glass effects for mobile performance */
+  .glass-premium {
+    backdrop-filter: blur(16px) saturate(150%);
+  }
+
+  /* Reduce expensive animations on mobile */
+  .hover-lift:hover {
+    transform: translateY(-4px) scale(1.01);
+  }
+
+  /* Mobile-specific spacing */
+  .mobile-px {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .mobile-py {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+}
+
+/* High DPI screen optimizations */
+@media screen and (-webkit-min-device-pixel-ratio: 2), 
+       screen and (min-resolution: 192dpi) {
+  .glass-premium {
+    backdrop-filter: blur(20px) saturate(180%);
+  }
 }
