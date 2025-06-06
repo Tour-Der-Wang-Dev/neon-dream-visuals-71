@@ -1,10 +1,9 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Zap, Settings, Gallery, Sparkles } from 'lucide-react';
+import { Zap, Settings, Images, Sparkles } from 'lucide-react';
 import PromptSuggestions from '@/components/PromptSuggestions';
 import StylePresets from '@/components/StylePresets';
 import ParameterControls from '@/components/ParameterControls';
@@ -93,7 +92,7 @@ const LiveDemo = () => {
               Examples
             </TabsTrigger>
             <TabsTrigger value="gallery" className="font-inter">
-              <Gallery className="w-4 h-4 mr-2" />
+              <Images className="w-4 h-4 mr-2" />
               Gallery
             </TabsTrigger>
           </TabsList>
