@@ -1,0 +1,215 @@
+
+name: Knowledge Base Maintenance
+
+on:
+  schedule:
+    # Run weekly on Sundays at 2 AM UTC
+    - cron: '0 2 * * 0'
+  workflow_dispatch:
+    inputs:
+      task:
+        description: 'Maintenance task to run'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+        - all
+        - links
+        - validate
+        - lint
+        - outdated
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  maintenance:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install maintenance tools
+      run: |
+        npm install -g markdown-link-check markdownlint-cli
+        chmod +x scripts/kb-maintenance.sh
+
+    - name: Create logs directory
+      run: mkdir -p docs/logs
+
+    - name: Run knowledge base maintenance
+      run: |
+        task="${{ github.event.inputs.task || 'all' }}"
+        ./scripts/kb-maintenance.sh "$task"
+
+    - name: Check for changes
+      id: changes
+      run: |
+        if git diff --quiet; then
+          echo "changes=false" >> $GITHUB_OUTPUT
+        else
+          echo "changes=true" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Commit and push changes
+      if: steps.changes.outputs.changes == 'true'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .
+        git commit -m "chore: automated knowledge base maintenance"
+        git push
+
+    - name: Create issue for broken links
+      if: failure()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const title = 'Knowledge Base Maintenance Issues Detected';
+          const body = `
+          Automated knowledge base maintenance detected issues that require attention.
+          
+          **Workflow Run:** [#${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          **Timestamp:** ${{ github.event.head_commit.timestamp }}
+          
+          Please review the workflow logs and address any issues found.
+          
+          Common issues:
+          - Broken links in documentation
+          - Missing YAML frontmatter fields
+          - Markdown formatting errors
+          - Outdated content requiring updates
+          
+          /cc @${{ github.actor }}
+          `;
+          
+          // Check if issue already exists
+          const { data: issues } = await github.rest.issues.listForRepo({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            state: 'open',
+            labels: 'documentation,maintenance'
+          });
+          
+          const existingIssue = issues.find(issue => issue.title === title);
+          
+          if (!existingIssue) {
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['documentation', 'maintenance', 'bug']
+            });
+          }
+
+    - name: Upload maintenance logs
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: kb-maintenance-logs
+        path: docs/logs/
+        retention-days: 30
+
+  link-check:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event.inputs.task == 'links' || github.event.inputs.task == 'all'
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Check links in documentation
+      uses: gaurav-nelson/github-action-markdown-link-check@v1
+      with:
+        use-quiet-mode: 'yes'
+        use-verbose-mode: 'yes'
+        config-file: '.github/workflows/markdown-link-check.json'
+        folder-path: 'docs'
+        max-depth: 3
+
+  validate-content:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Validate YAML frontmatter
+      run: |
+        python3 << EOF
+        import os
+        import yaml
+        import sys
+        
+        required_fields = ['title', 'author', 'created', 'modified', 'version', 'status', 'tags', 'category', 'audience']
+        errors = []
+        
+        for root, dirs, files in os.walk('docs'):
+            for file in files:
+                if file.startswith('KB_') and file.endswith('.md'):
+                    filepath = os.path.join(root, file)
+                    with open(filepath, 'r', encoding='utf-8') as f:
+                        content = f.read()
+                    
+                    if content.startswith('---'):
+                        try:
+                            yaml_end = content.find('---', 3)
+                            if yaml_end == -1:
+                                errors.append(f"{filepath}: No closing YAML delimiter")
+                                continue
+                            
+                            yaml_content = content[3:yaml_end]
+                            metadata = yaml.safe_load(yaml_content)
+                            
+                            for field in required_fields:
+                                if field not in metadata:
+                                    errors.append(f"{filepath}: Missing required field '{field}'")
+                        
+                        except yaml.YAMLError as e:
+                            errors.append(f"{filepath}: Invalid YAML - {e}")
+                    else:
+                        errors.append(f"{filepath}: Missing YAML frontmatter")
+        
+        if errors:
+            print("YAML validation errors found:")
+            for error in errors:
+                print(f"  - {error}")
+            sys.exit(1)
+        else:
+            print("All YAML frontmatter is valid!")
+        EOF
+
+    - name: Check documentation structure
+      run: |
+        # Verify required documentation files exist
+        required_files=(
+          "docs/KB_Index_v1.0.md"
+          "docs/KB_ContentStandards_v1.0.md"
+          "README.md"
+        )
+        
+        missing_files=()
+        for file in "${required_files[@]}"; do
+          if [[ ! -f "$file" ]]; then
+            missing_files+=("$file")
+          fi
+        done
+        
+        if [[ ${#missing_files[@]} -gt 0 ]]; then
+          echo "Missing required documentation files:"
+          printf '  - %s\n' "${missing_files[@]}"
+          exit 1
+        fi
+        
+        echo "All required documentation files are present!"

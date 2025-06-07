@@ -1,3 +1,17 @@
+---
+title: "AI Image Generator Platform"
+author: "AI Image Generator Team"
+created: "2025-06-07"
+modified: "2025-06-07"
+version: "1.0.0"
+status: "active"
+tags: ["react", "typescript", "ai", "image-generation", "tailwind", "vite"]
+category: "meta"
+audience: "all"
+complexity: "beginner"
+estimated_read_time: "15 minutes"
+related_docs: ["docs/KB_Architecture_v1.0.md", "docs/KB_Structure_v1.0.md", "docs/KB_Scripts_v1.0.md"]
+---
 
 # AI Image Generator Platform 🎨✨
 
